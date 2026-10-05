@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dino Run</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-shell">
+      <div class="top-bar">
+        <div class="score-panel">
+          <span class="label">HI</span>
+          <span id="highScoreDisplay" class="value">000000</span>
+        </div>
+        <div class="score-panel">
+          <span class="label">SCORE</span>
+          <span id="scoreDisplay" class="value">000000</span>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button id="clearHighScoreButton" class="secondary-btn" type="button">Clear High Score</button>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="gameCanvas" width="960" height="240" aria-label="Dino Run Game"></canvas>
+
+        <div id="startOverlay" class="overlay visible">
+          <div class="panel">
+            <h1>DINO RUN</h1>
+            <p class="lead">Press SPACE / ↑ to Jump</p>
+            <p class="lead">Touch: Jump</p>
+            <button id="startButton" class="primary-btn" type="button">START GAME</button>
+          </div>
+        </div>
+
+        <div id="gameOverOverlay" class="overlay hidden">
+          <div class="panel">
+            <h2>GAME OVER</h2>
+            <p id="newHighScoreText" class="new-high-score hidden">NEW HIGH SCORE!</p>
+            <div class="overlay-row">
+              <span>SCORE</span>
+              <span id="finalScoreDisplay">000000</span>
+            </div>
+            <div class="overlay-row">
+              <span>HI</span>
+              <span id="finalHighScoreDisplay">000000</span>
+            </div>
+            <button id="restartButton" class="primary-btn" type="button">RESTART</button>
+            <p class="hint">Press SPACE to Restart</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
