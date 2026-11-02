@@ -11,6 +11,16 @@ const clearHighScoreButton = document.getElementById('clearHighScoreButton');
 const finalScoreDisplay = document.getElementById('finalScoreDisplay');
 const finalHighScoreDisplay = document.getElementById('finalHighScoreDisplay');
 const newHighScoreText = document.getElementById('newHighScoreText');
+const playerImage = new Image();
+playerImage.src = '951c66a93df56ee.gif';
+playerImage.addEventListener('error', () => {
+  console.error('Unable to load player image: 951c66a93df56ee.gif');
+});
+const jumpSound = new Audio('jump01.mp3');
+const powerUpSound = new Audio('powerup05.mp3');
+const collisionSound = new Audio('powerdown03.mp3');
+const backgroundMusic = new Audio('Dino Music Box.mp3');
+backgroundMusic.loop = true;
 
 const GAME_WIDTH = canvas.width;
 const GAME_HEIGHT = canvas.height;
@@ -300,39 +310,10 @@ function updateGround(deltaTime) {
 }
 
 function drawDino() {
-  const bodyAlpha = 1;
-  const dinoColor = isNight ? '#f5f7ff' : '#222222';
-  const eyeColor = isNight ? '#0b1020' : '#ffffff';
-  const legColor = isNight ? '#dce8ff' : '#333333';
-  const stride = player.grounded ? Math.sin(runCycle) * 5 : 0;
-
-  ctx.save();
-  ctx.globalAlpha = bodyAlpha;
-  ctx.fillStyle = dinoColor;
-
-  const x = player.x;
-  const y = player.y;
-
-  ctx.fillRect(x + 10, y + 8, 18, 18);
-  ctx.fillRect(x + 28, y + 8, 12, 14);
-  ctx.fillRect(x + 2, y + 18, 30, 18);
-  ctx.fillRect(x + 20, y + 22, 20, 14);
-  ctx.fillRect(x + 12, y + 30, 12, 12);
-  ctx.fillRect(x + 24, y + 30, 12, 12);
-  ctx.fillRect(x + 0, y + 18, 8, 18);
-
-  ctx.fillStyle = legColor;
-  ctx.fillRect(x + 12, y + 40 + stride, 8, 12);
-  ctx.fillRect(x + 28, y + 40 - stride, 8, 12);
-
-  ctx.fillStyle = eyeColor;
-  ctx.fillRect(x + 30, y + 12, 4, 4);
-
-  ctx.fillStyle = dinoColor;
-  ctx.fillRect(x + 35, y + 18, 9, 6);
-  ctx.fillRect(x + 0, y + 25, 6, 10);
-
-  ctx.restore();
+  if (playerImage.complete && playerImage.naturalWidth > 0) {
+    const runBounce = player.grounded ? Math.sin(runCycle) * 2 : 0;
+    ctx.drawImage(playerImage, player.x, player.y + runBounce, player.width, player.height);
+  }
 }
 
 function drawCactus(obstacle) {
@@ -502,6 +483,11 @@ function spawnPowerUp() {
 }
 
 function activatePowerUp(type) {
+  powerUpSound.currentTime = 0;
+  powerUpSound.play().catch((error) => {
+    console.error('Unable to play power-up sound:', error);
+  });
+
   if (type === POWERUP_TYPES.SHIELD) {
     player.shieldTimer = 7;
   }
@@ -660,6 +646,10 @@ function checkCollision() {
         return;
       }
 
+      collisionSound.currentTime = 0;
+      collisionSound.play().catch((error) => {
+        console.error('Unable to play collision sound:', error);
+      });
       gameOver();
       return;
     }
@@ -730,6 +720,10 @@ function handleJump() {
   if (gameState === 'playing' && player.grounded) {
     player.velocityY = player.jumpPower;
     player.grounded = false;
+    jumpSound.currentTime = 0;
+    jumpSound.play().catch((error) => {
+      console.error('Unable to play jump sound:', error);
+    });
   }
 }
 
@@ -804,6 +798,12 @@ function resetGame() {
 }
 
 function startGame() {
+  if (backgroundMusic.paused) {
+    backgroundMusic.play().catch((error) => {
+      console.error('Unable to play background music:', error);
+    });
+  }
+
   resetGame();
   gameState = 'playing';
   hideStartOverlay();
